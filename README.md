@@ -1,1 +1,1 @@
-# website
+# ZephyrusSMP - Website
