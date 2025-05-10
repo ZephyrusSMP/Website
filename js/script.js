@@ -1,8 +1,5 @@
-/*
-Configuration
-------------------------
-*/
 
+// Configuration
 const config = {
     serverInfo: {
         serverLogoImageFileName: "logo.png",
@@ -11,9 +8,25 @@ const config = {
         serverBedrockIp: "147.185.221.25:19132",
         discordServerID: "1079412112767598703"
     },
+    contactPage: {
+        email: "zephyrussmp@gmail.com"
+    }
 };
 
-/* Fetch Discord online user count */
+// Mobile navbar toggle
+document.addEventListener("DOMContentLoaded", () => {
+    const navbar = document.querySelector(".navbar");
+    const navbarLinks = document.querySelector(".links");
+    const hamburger = document.querySelector(".hamburger");
+
+    if (hamburger && navbar && navbarLinks) {
+        hamburger.addEventListener("click", () => {
+            navbar.classList.toggle("active");
+            navbarLinks.classList.toggle("active");
+        });
+    }
+});
+
 const getDiscordOnlineUsers = async () => {
     try {
         const apiWidgetUrl = `https://discord.com/api/guilds/${config.serverInfo.discordServerID}/widget.json`;
@@ -26,7 +39,6 @@ const getDiscordOnlineUsers = async () => {
     }
 };
 
-/* Fetch Java players via mcstatus.io */
 const getJavaOnlinePlayers = async () => {
     try {
         const apiUrl = `https://api.mcstatus.io/v2/status/java/${config.serverInfo.serverIp}`;
@@ -39,7 +51,6 @@ const getJavaOnlinePlayers = async () => {
     }
 };
 
-/* Fetch Bedrock players via mcstatus.io */
 const getBedrockOnlinePlayers = async () => {
     try {
         const apiUrl = `https://api.mcstatus.io/v2/status/bedrock/${config.serverInfo.serverBedrockIp}`;
@@ -52,7 +63,6 @@ const getBedrockOnlinePlayers = async () => {
     }
 };
 
-/* Copy server IP to clipboard */
 const copyIp = () => {
     const btn = document.querySelector(".copy-ip");
     const alert = document.querySelector(".ip-copied");
@@ -72,7 +82,6 @@ const copyIp = () => {
     });
 };
 
-/* Apply config & live data to HTML */
 const setDataFromConfigToHtml = async () => {
     const logoImg = document.querySelector(".logo-img");
     const logoImgHeader = document.querySelector(".logo-img-header");
@@ -96,7 +105,17 @@ const setDataFromConfigToHtml = async () => {
         const total = javaCount + bedrockCount;
         playerElem.textContent = `${total}`;
     }
+
+    if (window.location.pathname.includes("contact")) {
+        const contactForm = document.querySelector(".contact-form");
+        const inputWithLocationAfterSubmit = document.querySelector(".location-after-submit");
+        if (contactForm) contactForm.action = `https://formsubmit.co/${config.contactPage.email}`;
+        if (inputWithLocationAfterSubmit) inputWithLocationAfterSubmit.value = location.href;
+        if (discordElem) discordElem.textContent = await getDiscordOnlineUsers();
+    }
 };
 
-// Initialize on page load
-setDataFromConfigToHtml();
+// Initialize
+document.addEventListener("DOMContentLoaded", () => {
+    setDataFromConfigToHtml();
+});
